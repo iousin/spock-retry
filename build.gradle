@@ -1,15 +1,11 @@
-def spockRetryVersion = "0.6.2"
+def spockRetryVersion = "1.7.0"
 
 buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
-    }
 }
 
-apply plugin: "com.jfrog.bintray"
 apply plugin: "maven"
 apply plugin: "maven-publish"
 apply plugin: "groovy"
@@ -34,29 +30,12 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            groupId "com.anotherchrisberry"
+            groupId "com.spock.extensions"
             artifactId "spock-retry"
             version "${spockRetryVersion}"
             artifact sourceJar {
               classifier "sources"
             }
         }
-    }
-}
-
-bintray {
-    user = System.getProperty('user')
-    key = System.getProperty('apiKey')
-    pkg {
-      repo = "spock-retry"
-      name = "spock-retry"
-      licenses = ["MIT"]
-      vcsUrl = "https://github.com/anotherchrisberry/spock-retry.git"
-      publications = ["mavenJava"]    
-      version {
-        name = "${spockRetryVersion}"
-        released = new Date()
-        vcsTag = "${spockRetryVersion}"
-      }
     }
 }

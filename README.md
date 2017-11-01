@@ -1,3 +1,7 @@
+# Java 7 compatible
+
+This fork will be kept up to date with the original implementation apart from the build which will be compatible with java 7.
+
 # Spock Extensions
 
 Really just one: `@RetryOnFailure`, which allows your tests to be a little more resilient to transient failures.
