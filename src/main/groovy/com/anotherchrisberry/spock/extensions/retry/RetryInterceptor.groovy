@@ -1,15 +1,12 @@
 package com.anotherchrisberry.spock.extensions.retry
 
+import groovy.util.logging.Slf4j
 import org.spockframework.runtime.extension.IMethodInterceptor
 import org.spockframework.runtime.extension.IMethodInvocation
 import org.spockframework.util.ReflectionUtil
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-
+@Slf4j
 class RetryInterceptor implements IMethodInterceptor {
-
-    static Logger LOG = LoggerFactory.getLogger(RetryInterceptor.class);
 
     private static final String BEFORE_RETRY_METHOD_NAME = "beforeRetry"
 
@@ -30,7 +27,7 @@ class RetryInterceptor implements IMethodInterceptor {
             } catch (org.junit.AssumptionViolatedException e) {
                 throw e
             } catch (Throwable t) {
-                LOG.info("Retry caught failure ${attempts + 1} / ${retryMax + 1}: ", t)
+                log.info("Retry caught failure ${attempts + 1} / ${retryMax + 1}: ", t)
                 attempts++
                 if (attempts > retryMax) {
                     throw t
@@ -45,7 +42,7 @@ class RetryInterceptor implements IMethodInterceptor {
                                 ReflectionUtil.invokeMethod(invocation.target, it.reflection)
                             }
                         } catch (Throwable t2) {
-                            LOG.warn("Retry caught failure ${attempts + 1} / ${retryMax + 1} while cleaning up", t2)
+                            log.warn("Retry caught failure ${attempts + 1} / ${retryMax + 1} while cleaning up", t2)
                         }
                     }
                 }
@@ -61,7 +58,7 @@ class RetryInterceptor implements IMethodInterceptor {
                             if (attempts > retryMax) {
                                 throw t
                             }
-                            LOG.info("Retry caught failure ${attempts + 1} / ${retryMax + 1} while setting up", t2)
+                            log.info("Retry caught failure ${attempts + 1} / ${retryMax + 1} while setting up", t2)
                         }
                     }
                 }
@@ -71,7 +68,7 @@ class RetryInterceptor implements IMethodInterceptor {
                         invocation.target."$BEFORE_RETRY_METHOD_NAME"()
                     } catch (Throwable t2) {
                         // increment counter, since this is the start of the re-run
-                        LOG.info("Retry caught failure when invoking $BEFORE_RETRY_METHOD_NAME ", t2)
+                        log.info("Retry caught failure when invoking $BEFORE_RETRY_METHOD_NAME ", t2)
                     }
                 }
             }
